@@ -185,7 +185,7 @@ public class AACMappings implements AACPage {
 	 * @param text the text associated with the image
 	 */
 	public void addItem(String imageLoc, String text) {
-		
+		this.curScreen.addItem(imageLoc, text);
 	}
 
 
@@ -207,6 +207,6 @@ public class AACMappings implements AACPage {
 	 * can be displayed, false otherwise
 	 */
 	public boolean hasImage(String imageLoc) {
-		return false;
+		return this.curScreen.hasImage(imageLoc);
 	}
 }
