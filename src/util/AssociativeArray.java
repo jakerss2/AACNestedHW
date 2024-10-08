@@ -99,6 +99,23 @@ public class AssociativeArray<K, V> {
     return arrString;
   } // toString()
 
+  /**
+   * Get all of the keys in the AssociativeArray
+   *
+   * @return all of the keys
+   */
+  public String[] getAllKeys() {
+    String[] arrString = new String[this.size];
+    for (int i = 0; i < this.size - 1; i++) {
+      try {
+        arrString[i] = (String) this.pairs[i].key;
+      } catch (Exception e) {
+        System.err.print("Somehow added a null");
+      }
+    }
+    return arrString;
+  } // toString()
+
   // +----------------+----------------------------------------------
   // | Public Methods |
   // +----------------+
