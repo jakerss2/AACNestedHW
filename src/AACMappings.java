@@ -1,3 +1,11 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import util.AssociativeArray;
+import java.io.PrintWriter;
+
 /**
  * Creates a set of mappings of an AAC that has two levels,
  * one for categories and then within each category, it has
@@ -6,11 +14,29 @@
  * and updating the set of images that would be shown and handling
  * an interactions.
  * 
- * @author Catie Baker & YOUR NAME HERE
+ * @author Catie Baker & Jake Bell
  *
  */
 public class AACMappings implements AACPage {
-	
+
+  // +--------+------------------------------------------------------
+  // | Fields |
+  // +--------+
+
+  /**
+   * The array that will hold all of the mapped(key:pair) categories.
+   */
+  AssociativeArray<String, AACCategory> mappedCategories;
+
+  /** This is the home screen that lists the different categories */
+  AACCategory homeScreen;
+
+  /** This is to hold the current screen the user is on */
+	AACCategory curScreen;
+  
+  // +-------------+------------------------------------------------------
+  // | Constructor |
+  // +-------------+
 	/**
 	 * Creates a set of mappings for the AAC based on the provided
 	 * file. The file is read in to create categories and fill each
@@ -32,7 +58,33 @@ public class AACMappings implements AACPage {
 	 * @param filename the name of the file that stores the mapping information
 	 */
 	public AACMappings(String filename) {
+    this.mappedCategories = new AssociativeArray<String, AACCategory>();
+    this.homeScreen = new AACCategory("home");
+    this.curScreen = this.homeScreen;
+    File imgFile = new File(filename);
+    Scanner eyes = new Scanner(filename);
+    
+    try {
+      while (eyes.hasNextLine()) {
+        String message = eyes.nextLine();
+        String[] lineSplit = message.split(" ");
 
+        // If the current line is a category
+        if (!(lineSplit[0].substring(0,1).equals(">"))) {
+          this.homeScreen.addItem(lineSplit[0], lineSplit[1]);
+          try {
+            this.mappedCategories.set(lineSplit[0], new AACCategory(lineSplit[1]));
+            this.curScreen = (AACCategory) this.mappedCategories.get(lineSplit[0]);
+          } catch (Exception e) {
+            System.err.print("Unsucessful get and set");
+          }
+        } else {
+          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
+        }
+      }
+    } catch (Exception e) {
+      // do nothing?
+    }
 	}
 	
 	/**
@@ -50,7 +102,18 @@ public class AACMappings implements AACPage {
 	 * category
 	 */
 	public String select(String imageLoc) {
-		return null;
+    try {
+      if (this.mappedCategories.hasKey(imageLoc)) {
+        this.curScreen = this.mappedCategories.get(imageLoc);
+        return "";
+      } else if (this.curScreen.hasImage(imageLoc)) {
+        return this.curScreen.select(imageLoc);
+      }
+    } catch (Exception e) {
+      System.err.print("Error getting imageloc");
+      return "";
+    }
+		return "";
 	}
 	
 	/**
@@ -59,7 +122,11 @@ public class AACMappings implements AACPage {
 	 * it should return an empty array
 	 */
 	public String[] getImageLocs() {
-		return null;
+    try {
+      return this.curScreen.getImageLocs();
+    } catch (Exception e) {
+      return new String[0];
+    }
 	}
 	
 	/**
@@ -67,7 +134,7 @@ public class AACMappings implements AACPage {
 	 * category
 	 */
 	public void reset() {
-
+    this.curScreen = this.homeScreen;
 	}
 	
 	
@@ -91,8 +158,24 @@ public class AACMappings implements AACPage {
 	 * @param filename the name of the file to write the
 	 * AAC mapping to
 	 */
-	public void writeToFile(String filename) {
-		
+	public void writeToFile(String filename) throws IOException {
+    FileWriter filePen = new FileWriter(filename);
+		PrintWriter pen = new PrintWriter(filePen);
+    String[] keys = this.mappedCategories.getAllKeys();
+
+    for (int i = 0; i < this.mappedCategories.size(); i++) {
+      try {
+        this.curScreen = this.mappedCategories.get(keys[i]);
+        pen.println(keys[i] + this.getCategory());
+        String[] imageLocs = this.curScreen.getImageLocs();
+        for (String img : imageLocs) {
+          pen.println(img + this.curScreen.select(img));
+        }
+      } catch (Exception e) {
+        System.err.println("There is an error?");
+      }
+    }
+    pen.close();
 	}
 	
 	/**
@@ -112,7 +195,7 @@ public class AACMappings implements AACPage {
 	 * on the default category
 	 */
 	public String getCategory() {
-		return null;
+		return this.curScreen.getCategory();
 	}
 
 
