@@ -158,24 +158,27 @@ public class AACMappings implements AACPage {
 	 * @param filename the name of the file to write the
 	 * AAC mapping to
 	 */
-	public void writeToFile(String filename) throws IOException {
-    FileWriter filePen = new FileWriter(filename);
-		PrintWriter pen = new PrintWriter(filePen);
-    String[] keys = this.mappedCategories.getAllKeys();
-
-    for (int i = 0; i < this.mappedCategories.size(); i++) {
-      try {
-        this.curScreen = this.mappedCategories.get(keys[i]);
-        pen.println(keys[i] + this.getCategory());
-        String[] imageLocs = this.curScreen.getImageLocs();
-        for (String img : imageLocs) {
-          pen.println(img + this.curScreen.select(img));
+	public void writeToFile(String filename) {
+    try {
+      FileWriter filePen = new FileWriter(filename);
+      PrintWriter pen = new PrintWriter(filePen);
+      String[] keys = this.mappedCategories.getAllKeys();
+  
+      for (int i = 0; i < this.mappedCategories.size(); i++) {
+        try {
+          this.curScreen = this.mappedCategories.get(keys[i]);
+          pen.println(keys[i] + this.getCategory());
+          String[] imageLocs = this.curScreen.getImageLocs();
+          for (String img : imageLocs) {
+            pen.println(img + this.curScreen.select(img));
+          }
+        } catch (Exception e) {
+          System.err.println("There is an error?");
         }
-      } catch (Exception e) {
-        System.err.println("There is an error?");
       }
+      pen.close();
+    } catch (Exception e) {
     }
-    pen.close();
 	}
 	
 	/**
