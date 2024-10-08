@@ -1,10 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import util.AssociativeArray;
-import java.io.PrintWriter;
 
 /**
  * Creates a set of mappings of an AAC that has two levels,
@@ -61,10 +60,9 @@ public class AACMappings implements AACPage {
     this.mappedCategories = new AssociativeArray<String, AACCategory>();
     this.homeScreen = new AACCategory("home");
     this.curScreen = this.homeScreen;
-    File imgFile = new File(filename);
-    Scanner eyes = new Scanner(filename);
     
     try {
+      Scanner eyes = new Scanner(new File(filename));
       while (eyes.hasNextLine()) {
         String message = eyes.nextLine();
         String[] lineSplit = message.split(" ");
@@ -80,8 +78,10 @@ public class AACMappings implements AACPage {
           }
         } else {
           this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
-        }
-      }
+        } // else
+      } // while
+      this.curScreen = this.homeScreen;
+      eyes.close();
     } catch (Exception e) {
       // do nothing?
     }
