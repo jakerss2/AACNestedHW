@@ -65,19 +65,18 @@ public class AACMappings implements AACPage {
       Scanner eyes = new Scanner(new File(filename));
       while (eyes.hasNextLine()) {
         String message = eyes.nextLine();
-        String[] lineSplit = message.split(" ");
+        String[] lineSplit = message.split(" ", 2);
 
-        // If the current line is a category
-        if (!(lineSplit[0].substring(0,1).equals(">"))) {
+        if (lineSplit[0].substring(0,1).equals(">")) {
+          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
+        } else {
           this.homeScreen.addItem(lineSplit[0], lineSplit[1]);
           try {
             this.mappedCategories.set(lineSplit[0], new AACCategory(lineSplit[1]));
-            this.curScreen = (AACCategory) this.mappedCategories.get(lineSplit[0]);
+            this.curScreen = this.mappedCategories.get(lineSplit[0]);
           } catch (Exception e) {
             System.err.print("Unsucessful get and set");
           }
-        } else {
-          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
         } // else
       } // while
       this.curScreen = this.homeScreen;
@@ -170,7 +169,7 @@ public class AACMappings implements AACPage {
           pen.println(keys[i] + this.getCategory());
           String[] imageLocs = this.curScreen.getImageLocs();
           for (String img : imageLocs) {
-            pen.println(img + this.curScreen.select(img));
+            pen.println(">" + img + " " + this.curScreen.select(img));
           }
         } catch (Exception e) {
           System.err.println("There is an error?");
@@ -210,6 +209,6 @@ public class AACMappings implements AACPage {
 	 * can be displayed, false otherwise
 	 */
 	public boolean hasImage(String imageLoc) {
-		return this.curScreen.hasImage(imageLoc);
+		return this.mappedCategories.hasKey(imageLoc);
 	}
 }
