@@ -58,7 +58,7 @@ public class AACMappings implements AACPage {
 	 */
 	public AACMappings(String filename) {
     this.mappedCategories = new AssociativeArray<String, AACCategory>();
-    this.homeScreen = new AACCategory("home");
+    this.homeScreen = new AACCategory("");
     this.curScreen = this.homeScreen;
     
     try {
