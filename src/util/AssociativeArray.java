@@ -106,7 +106,7 @@ public class AssociativeArray<K, V> {
    */
   public String[] getAllKeys() {
     String[] arrString = new String[this.size];
-    for (int i = 0; i < this.size - 1; i++) {
+    for (int i = 0; i < this.size; i++) {
       try {
         arrString[i] = (String) this.pairs[i].key;
       } catch (Exception e) {
