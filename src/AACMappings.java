@@ -57,6 +57,7 @@ public class AACMappings implements AACPage {
 	 * @param filename the name of the file that stores the mapping information
 	 */
 	public AACMappings(String filename) {
+    // Initialize the categories.
     this.mappedCategories = new AssociativeArray<String, AACCategory>();
     this.homeScreen = new AACCategory("");
     this.curScreen = this.homeScreen;
@@ -65,6 +66,7 @@ public class AACMappings implements AACPage {
       Scanner eyes = new Scanner(new File(filename));
       while (eyes.hasNextLine()) {
         String message = eyes.nextLine();
+        //Split the string only once
         String[] lineSplit = message.split(" ", 2);
 
         if (lineSplit[0].substring(0,1).equals(">")) {
@@ -76,15 +78,15 @@ public class AACMappings implements AACPage {
             this.curScreen = this.mappedCategories.get(lineSplit[0]);
           } catch (Exception e) {
             System.err.print("Unsucessful get and set");
-          }
+          } // try/catch
         } // else
       } // while
       this.curScreen = this.homeScreen;
       eyes.close();
     } catch (Exception e) {
       // do nothing?
-    }
-	}
+    } // try/catch
+	} // AACMappings(String)
 	
 	/**
 	 * Given the image location selected, it determines the action to be
@@ -103,17 +105,19 @@ public class AACMappings implements AACPage {
 	public String select(String imageLoc) {
     try {
       if (this.mappedCategories.hasKey(imageLoc)) {
+        // ImageLoc is a screen
         this.curScreen = this.mappedCategories.get(imageLoc);
         return "";
       } else if (this.curScreen.hasImage(imageLoc)) {
+        // ImageLoc is an item
         return this.curScreen.select(imageLoc);
       }
     } catch (Exception e) {
       System.err.print("Error getting imageloc");
       return "";
-    }
+    } // try/catch
 		return "";
-	}
+	} // select(imageLoc)
 	
 	/**
 	 * Provides an array of all the images in the current category
@@ -125,8 +129,8 @@ public class AACMappings implements AACPage {
       return this.curScreen.getImageLocs();
     } catch (Exception e) {
       return new String[0];
-    }
-	}
+    } // try/catch
+	} // getImageLocs()
 	
 	/**
 	 * Resets the current category of the AAC back to the default
@@ -134,7 +138,7 @@ public class AACMappings implements AACPage {
 	 */
 	public void reset() {
     this.curScreen = this.homeScreen;
-	}
+	} // reset()
 	
 	
 	/**
@@ -163,22 +167,24 @@ public class AACMappings implements AACPage {
       PrintWriter pen = new PrintWriter(filePen);
       String[] keys = this.mappedCategories.getAllKeys();
   
+      // for each category.
       for (int i = 0; i < this.mappedCategories.size(); i++) {
         try {
           this.curScreen = this.mappedCategories.get(keys[i]);
           pen.println(keys[i] + this.getCategory());
           String[] imageLocs = this.curScreen.getImageLocs();
+          // for each image in each category.
           for (String img : imageLocs) {
             pen.println(">" + img + " " + this.curScreen.select(img));
           }
         } catch (Exception e) {
           System.err.println("There is an error?");
-        }
+        } // try/catch
       }
       pen.close();
     } catch (Exception e) {
-    }
-	}
+    } // try/catch
+	} // writeToFile(String)
 	
 	/**
 	 * Adds the mapping to the current category (or the default category if
@@ -188,7 +194,7 @@ public class AACMappings implements AACPage {
 	 */
 	public void addItem(String imageLoc, String text) {
 		this.curScreen.addItem(imageLoc, text);
-	}
+	} // additem(String, String)
 
 
 	/**
@@ -198,7 +204,7 @@ public class AACMappings implements AACPage {
 	 */
 	public String getCategory() {
 		return this.curScreen.getCategory();
-	}
+	} // getCategory()
 
 
 	/**
@@ -210,5 +216,5 @@ public class AACMappings implements AACPage {
 	 */
 	public boolean hasImage(String imageLoc) {
 		return this.mappedCategories.hasKey(imageLoc);
-	}
-}
+	} // hasImage(String)
+} // class AACMappings
