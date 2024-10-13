@@ -59,7 +59,7 @@ public class AACMappings implements AACPage {
 	public AACMappings(String filename) {
     // Initialize the categories.
     this.mappedCategories = new AssociativeArray<String, AACCategory>();
-    this.homeScreen = new AACCategory("home");
+    this.homeScreen = new AACCategory("");
     this.curScreen = this.homeScreen;
     
     try {
@@ -68,18 +68,8 @@ public class AACMappings implements AACPage {
         String message = eyes.nextLine();
         //Split the string only once
         String[] lineSplit = message.split(" ", 2);
+        this.addItem(lineSplit[0], lineSplit[1]);
 
-        if (lineSplit[0].substring(0,1).equals(">")) {
-          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
-        } else {
-          this.homeScreen.addItem(lineSplit[0], lineSplit[1]);
-          try {
-            this.mappedCategories.set(lineSplit[0], new AACCategory(lineSplit[1]));
-            this.curScreen = this.mappedCategories.get(lineSplit[0]);
-          } catch (Exception e) {
-            System.err.print("Unsucessful get and set");
-          } // try/catch
-        } // else
       } // while
       this.curScreen = this.homeScreen;
       eyes.close();
@@ -105,7 +95,7 @@ public class AACMappings implements AACPage {
 	public String select(String imageLoc) throws NoSuchElementException {
     try {
       if (this.mappedCategories.hasKey(imageLoc) && 
-          this.curScreen.getCategory().equals("home")) {
+          this.curScreen.getCategory().equals("")) {
         // ImageLoc is a screen
         this.curScreen = this.mappedCategories.get(imageLoc);
         return "";
@@ -195,7 +185,17 @@ public class AACMappings implements AACPage {
 	 * @param text the text associated with the image
 	 */
 	public void addItem(String imageLoc, String text) {
-		this.curScreen.addItem(imageLoc, text);
+    if (imageLoc.substring(0,1).equals(">")) {
+      this.curScreen.addItem(imageLoc.substring(1), text);
+    } else {
+      this.homeScreen.addItem(imageLoc, text);
+      try {
+        this.mappedCategories.set(imageLoc, new AACCategory(text));
+        this.curScreen = this.mappedCategories.get(imageLoc);
+      } catch (Exception e) {
+        System.err.print("Unsucessful get and set");
+      } // try/catch
+    } // else
 	} // additem(String, String)
 
 
