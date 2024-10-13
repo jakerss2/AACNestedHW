@@ -59,7 +59,7 @@ public class AACMappings implements AACPage {
 	public AACMappings(String filename) {
     // Initialize the categories.
     this.mappedCategories = new AssociativeArray<String, AACCategory>();
-    this.homeScreen = new AACCategory("");
+    this.homeScreen = new AACCategory("home");
     this.curScreen = this.homeScreen;
     
     try {
@@ -102,21 +102,23 @@ public class AACMappings implements AACPage {
 	 * @throws NoSuchElementException if the image provided is not in the current 
 	 * category
 	 */
-	public String select(String imageLoc) {
+	public String select(String imageLoc) throws NoSuchElementException {
     try {
-      if (this.mappedCategories.hasKey(imageLoc)) {
+      if (this.mappedCategories.hasKey(imageLoc) && 
+          this.curScreen.getCategory().equals("home")) {
         // ImageLoc is a screen
         this.curScreen = this.mappedCategories.get(imageLoc);
         return "";
       } else if (this.curScreen.hasImage(imageLoc)) {
         // ImageLoc is an item
         return this.curScreen.select(imageLoc);
+      } else {
+        this.reset();
+        throw new NoSuchElementException();
       }
     } catch (Exception e) {
-      System.err.print("Error getting imageloc");
-      return "";
+      throw new NoSuchElementException();
     } // try/catch
-		return "";
 	} // select(imageLoc)
 	
 	/**
