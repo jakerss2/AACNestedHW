@@ -183,7 +183,6 @@ public class AACMappings implements AACPage {
             pen.println(">" + img + " " + this.curScreen.select(img));
           }
         } catch (Exception e) {
-          System.err.println("There is an error?");
         } // try/catch
       }
       pen.close();
