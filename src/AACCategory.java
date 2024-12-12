@@ -1,6 +1,7 @@
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
-import util.AssociativeArray;
+
+import edu.grinnell.csc207.util.AssociativeArray;
 
 /**
  * Represents the mappings for a single category of items that should

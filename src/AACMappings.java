@@ -3,7 +3,10 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import util.AssociativeArray;
+
+import edu.grinnell.csc207.util.AssociativeArray;
+
+
 
 /**
  * Creates a set of mappings of an AAC that has two levels,
@@ -107,7 +110,6 @@ public class AACMappings implements AACPage {
         throw new NoSuchElementException();
       }
     } catch (Exception e) {
-      return "";
       throw new NoSuchElementException();
     } // try/catch
 	} // select(imageLoc)
