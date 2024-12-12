@@ -68,18 +68,8 @@ public class AACMappings implements AACPage {
         String message = eyes.nextLine();
         //Split the string only once
         String[] lineSplit = message.split(" ", 2);
+        this.addItem(lineSplit[0], lineSplit[1]);
 
-        if (lineSplit[0].substring(0,1).equals(">")) {
-          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
-        } else {
-          this.homeScreen.addItem(lineSplit[0], lineSplit[1]);
-          try {
-            this.mappedCategories.set(lineSplit[0], new AACCategory(lineSplit[1]));
-            this.curScreen = this.mappedCategories.get(lineSplit[0]);
-          } catch (Exception e) {
-            System.err.print("Unsucessful get and set");
-          } // try/catch
-        } // else
       } // while
       this.curScreen = this.homeScreen;
       eyes.close();
@@ -102,20 +92,24 @@ public class AACMappings implements AACPage {
 	 * @throws NoSuchElementException if the image provided is not in the current 
 	 * category
 	 */
-	public String select(String imageLoc) {
+	public String select(String imageLoc) throws NoSuchElementException {
     try {
-      if (this.mappedCategories.hasKey(imageLoc)) {
+      if (this.mappedCategories.hasKey(imageLoc) && 
+          this.curScreen.getCategory().equals("")) {
         // ImageLoc is a screen
         this.curScreen = this.mappedCategories.get(imageLoc);
         return "";
       } else if (this.curScreen.hasImage(imageLoc)) {
         // ImageLoc is an item
         return this.curScreen.select(imageLoc);
+      } else {
+        this.reset();
+        throw new NoSuchElementException();
       }
     } catch (Exception e) {
       return "";
+      throw new NoSuchElementException();
     } // try/catch
-		return "";
 	} // select(imageLoc)
 	
 	/**
@@ -192,7 +186,17 @@ public class AACMappings implements AACPage {
 	 * @param text the text associated with the image
 	 */
 	public void addItem(String imageLoc, String text) {
-		this.curScreen.addItem(imageLoc, text);
+    if (imageLoc.substring(0,1).equals(">")) {
+      this.curScreen.addItem(imageLoc.substring(1), text);
+    } else {
+      this.homeScreen.addItem(imageLoc, text);
+      try {
+        this.mappedCategories.set(imageLoc, new AACCategory(text));
+        this.curScreen = this.mappedCategories.get(imageLoc);
+      } catch (Exception e) {
+        System.err.print("Unsucessful get and set");
+      } // try/catch
+    } // else
 	} // additem(String, String)
 
 
