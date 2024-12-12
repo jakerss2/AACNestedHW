@@ -3,8 +3,8 @@ A project for CSC-207.
 Authors:
 
 - Jacob Bell
-- Samuel A. Rebelsky (starter code)
-- Catie Baker
+- Samuel A. Rebelsky (tests)
+- Catie Baker (starter code)
 
 ---
 
