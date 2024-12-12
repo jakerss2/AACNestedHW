@@ -6,8 +6,9 @@ import edu.grinnell.csc207.util.AssociativeArray;
 /**
  * Represents the mappings for a single category of items that should
  * be displayed
- * 
- * @author Catie Baker & Jacob Bell
+ *
+ * @author Jacob Bell 
+ * @author Catie Baker
  *
  */
 
@@ -42,7 +43,6 @@ public class AACCategory implements AACPage {
     try {
       itemsArr.set(imageLoc, text);
     } catch (Exception e) {
-      System.err.print("Error setting location/text");
     } // try/catch
 	} // addItem(String, String)
 

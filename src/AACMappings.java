@@ -1,10 +1,9 @@
+import edu.grinnell.csc207.util.AssociativeArray;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
-import edu.grinnell.csc207.util.AssociativeArray;
 
 
 
@@ -15,8 +14,9 @@ import edu.grinnell.csc207.util.AssociativeArray;
  * provides the methods for interacting with the categories
  * and updating the set of images that would be shown and handling
  * an interactions.
- * 
- * @author Catie Baker & Jake Bell
+ *
+ * @author Jacob Bell
+ * @author Catie Baker
  *
  */
 public class AACMappings implements AACPage {
@@ -71,8 +71,18 @@ public class AACMappings implements AACPage {
         String message = eyes.nextLine();
         //Split the string only once
         String[] lineSplit = message.split(" ", 2);
-        this.addItem(lineSplit[0], lineSplit[1]);
 
+        if (lineSplit[0].substring(0,1).equals(">")) {
+          this.curScreen.addItem(lineSplit[0].substring(1), lineSplit[1]);
+        } else {
+          this.curScreen = this.homeScreen;
+          this.homeScreen.addItem(lineSplit[0], lineSplit[1]);
+          try {
+            this.mappedCategories.set(lineSplit[0], new AACCategory(lineSplit[1]));
+            this.select(lineSplit[0]);
+          } catch (Exception e) {
+          } // try/catch
+        } // else
       } // while
       this.curScreen = this.homeScreen;
       eyes.close();
@@ -98,7 +108,7 @@ public class AACMappings implements AACPage {
 	public String select(String imageLoc) throws NoSuchElementException {
     try {
       if (this.mappedCategories.hasKey(imageLoc) && 
-          this.curScreen.getCategory().equals("")) {
+          this.curScreen.getCategory().equals(this.homeScreen.getCategory())) {
         // ImageLoc is a screen
         this.curScreen = this.mappedCategories.get(imageLoc);
         return "";
@@ -108,7 +118,7 @@ public class AACMappings implements AACPage {
       } else {
         this.reset();
         throw new NoSuchElementException();
-      }
+      } // if
     } catch (Exception e) {
       throw new NoSuchElementException();
     } // try/catch
@@ -188,17 +198,13 @@ public class AACMappings implements AACPage {
 	 * @param text the text associated with the image
 	 */
 	public void addItem(String imageLoc, String text) {
-    if (imageLoc.substring(0,1).equals(">")) {
-      this.curScreen.addItem(imageLoc.substring(1), text);
-    } else {
-      this.homeScreen.addItem(imageLoc, text);
-      try {
+    this.curScreen.addItem(imageLoc, text);
+    try {
+      if (this.curScreen.equals(this.homeScreen)) {
         this.mappedCategories.set(imageLoc, new AACCategory(text));
-        this.curScreen = this.mappedCategories.get(imageLoc);
-      } catch (Exception e) {
-        System.err.print("Unsucessful get and set");
-      } // try/catch
-    } // else
+      } //if
+    } catch (Exception e) {
+    } // try/catch
 	} // additem(String, String)
 
 
