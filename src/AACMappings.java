@@ -113,7 +113,6 @@ public class AACMappings implements AACPage {
         return this.curScreen.select(imageLoc);
       }
     } catch (Exception e) {
-      System.err.print("Error getting imageloc");
       return "";
     } // try/catch
 		return "";
