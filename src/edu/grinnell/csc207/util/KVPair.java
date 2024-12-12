@@ -4,6 +4,8 @@ package edu.grinnell.csc207.util;
  * An easy way to store key/value pairs.  We assume that other
  * classes will access fields directly.
  *
+ * @author Samuel A. Rebelsky
+ *
  * @param <K>
  *   The type of the keys.
  * @param <V>
